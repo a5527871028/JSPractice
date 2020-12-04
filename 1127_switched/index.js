@@ -19,30 +19,36 @@ let staticFile = (response, fname,mime) => {
 } // staticFile()
 
 http.createServer((request, response) => {
-  request.on('data', (chunk) => {
-    console.log(`data chunk: ${chunk}`);
-  }).on('end', () => {
-    let url = require('url');
-    let pathname = url.parse(request.url).pathname;  //switch用request.url來回應使用者要求
+request.on('data', (chunk) => {
+  console.log(`data chunk: ${chunk}`);
+}).on('end', () => {
+  let path = require('path');
+  let url = require('url');
+  let pathname = url.parse(request.url).pathname;
+  let fname = route_table[pathname];
+  
+  /*const route_table & mime_type 是利用 Javascript 的 Object Literal(實體物件)，
+    將原來在 switch 裡處理的路由對應建立成兩個 Javascript 的物件 (objects)。*/
+  const route_table = {
+ '/': '../htdocs/index.html',
+ '/styles.css': '../htdocs/assets/css/styles.css',
+ '/index.js': '../htdocs/js/index.js',
+ };
 
-    switch (pathname) {
-      case '/':
-        staticFile(response, '../htdocs/index.html','text/html');
-        break;
-      
-      case '/htdocs/assets/styles.css':
-        staticFile(response,'../htdocs/assets/styles.css','text/css');
-        break;
-      
-      case '/htdocs/js/index.js':
-        staticFile(response,'../htdocs/js/index.js','text/javascript');
-        break;
+ const mime_type = {
+ '.css': 'text/css',
+ '.html': 'text/html',
+ '.js': 'text/javascript',
+ };//Code 5.1
 
-      default:
-        break;
-    } // switch
 
-    console.log(`Request for ${pathname}`);
+  if (fname) {
+    staticFile(
+      response, fname, mime_type[path.extname(fname)]
+    ); }
+  
+  console.log(`Request for ${pathname}`); //Code 7.1
+});
   });
 }).listen(8080);
 
