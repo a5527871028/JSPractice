@@ -1,6 +1,6 @@
 var http = require('http');
 
-let staticFile = (response, fname,mine) => {
+let staticFile = (response, fname,mime) => { 
   let fs = require('fs');
 
   fs.readFile(fname, (err, data) => {
@@ -23,7 +23,7 @@ http.createServer((request, response) => {
     console.log(`data chunk: ${chunk}`);
   }).on('end', () => {
     let url = require('url');
-    let pathname = url.parse(request.url).pathname;
+    let pathname = url.parse(request.url).pathname;  //switch用request.url來回應使用者要求
 
     switch (pathname) {
       case '/':
