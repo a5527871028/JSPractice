@@ -9,7 +9,7 @@ let staticFile = (response, fname,mime) => {
     }
     else {
       response.writeHead(200, {
-        'Content-Type': 'mine'
+        'Content-Type': 'mie'
       });
 
       response.write(data);
